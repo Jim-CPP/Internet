@@ -187,8 +187,43 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMessage, WPARAM wPara
 					{
 						// Successfully got url from edit window
 
-						// Display url
-						MessageBox( hWndMain, lpszUrl, INFORMATION_MESSAGE_CAPTION, ( MB_OK | MB_ICONINFORMATION ) );
+						// Allocate string memory
+						LPTSTR lpszLocalFilePath = new char[ STRING_LENGTH + sizeof( char ) ];
+						LPTSTR lpszStatusMessage = new char[ STRING_LENGTH + sizeof( char ) ];
+
+						// Format downloading status message
+						wsprintf( lpszStatusMessage, INTERNET_CLASS_DOWNLOADING_STATUS_MESSAGE_FORMAT_STRING, lpszUrl );
+
+						// Add downloading status message to list box window
+						ListBoxWindowAddText( lpszStatusMessage );
+
+						// Download file
+						if( g_internet.DownloadFile( lpszUrl, lpszLocalFilePath ) )
+						{
+							// Successfully downloaded file
+
+							// Format successfully downloaded status message
+							wsprintf( lpszStatusMessage, INTERNET_CLASS_SUCCESSFULLY_DOWNLOADED_STATUS_MESSAGE_FORMAT_STRING, lpszUrl, lpszLocalFilePath );
+
+							// Add successfully downloaded status message to list box window
+							ListBoxWindowAddText( lpszStatusMessage );
+
+						} // End of successfully downloaded file
+						else
+						{
+							// Unable to download file
+
+							// Format unable to download status message
+							wsprintf( lpszStatusMessage, INTERNET_CLASS_UNABLE_TO_DOWNLOAD_STATUS_MESSAGE_FORMAT_STRING, lpszUrl );
+
+							// Add unable to download status message to list box window
+							ListBoxWindowAddText( lpszStatusMessage );
+
+						} // End of unable to download file
+
+						// Free string memory
+						delete [] lpszLocalFilePath;
+						delete [] lpszStatusMessage;
 
 					} // End of successfully got url from edit window
 
