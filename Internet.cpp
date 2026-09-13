@@ -2,6 +2,9 @@
 
 #include "Internet.h"
 
+// Global variables
+Internet g_internet;
+
 void EditWindowUpdateFunction( int nTextLength )
 {
 	// See if edit window contains text
@@ -317,86 +320,103 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE, LPTSTR, int nCmdShow )
 {
 	MSG msg;
 
-	WNDCLASSEX wcMain;
-
 	// Clear message structure
 	ZeroMemory( &msg, sizeof( msg ) );
 
-	// Clear main window class structure
-	ZeroMemory( &wcMain, sizeof( wcMain ) );
-
-	// Initialise main window class structure
-	wcMain.cbSize			= sizeof( WNDCLASSEX );
-	wcMain.lpfnWndProc		= MainWindowProcedure;
-	wcMain.hInstance		= hInstance;
-	wcMain.lpszClassName	= MAIN_WINDOW_CLASS_NAME;
-	wcMain.style			= MAIN_WINDOW_CLASS_STYLE;
-	wcMain.hIcon			= MAIN_WINDOW_CLASS_ICON;
-	wcMain.hCursor			= MAIN_WINDOW_CLASS_CURSOR;
-	wcMain.hbrBackground	= MAIN_WINDOW_CLASS_BACKGROUND;
-	wcMain.lpszMenuName		= MAIN_WINDOW_CLASS_MENU_NAME;
-	wcMain.hIconSm			= MAIN_WINDOW_CLASS_ICON_SMALL;
-
-	// Register main window class
-	if( RegisterClassEx( &wcMain ) )
+	// Connect to internet
+	if( g_internet.Connect() )
 	{
-		// Successfully registered main window class
-		HWND hWndMain;
+		// Successfully connected to internet
+		WNDCLASSEX wcMain;
 
-		// Create main window
-		hWndMain = CreateWindowEx( MAIN_WINDOW_EXTENDED_STYLE, MAIN_WINDOW_CLASS_NAME, MAIN_WINDOW_TEXT, MAIN_WINDOW_STYLE, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,  NULL, NULL, hInstance, NULL );
+		// Clear main window class structure
+		ZeroMemory( &wcMain, sizeof( wcMain ) );
 
-		// Ensure that main window was created
-		if( hWndMain )
+		// Initialise main window class structure
+		wcMain.cbSize			= sizeof( WNDCLASSEX );
+		wcMain.lpfnWndProc		= MainWindowProcedure;
+		wcMain.hInstance		= hInstance;
+		wcMain.lpszClassName	= MAIN_WINDOW_CLASS_NAME;
+		wcMain.style			= MAIN_WINDOW_CLASS_STYLE;
+		wcMain.hIcon			= MAIN_WINDOW_CLASS_ICON;
+		wcMain.hCursor			= MAIN_WINDOW_CLASS_CURSOR;
+		wcMain.hbrBackground	= MAIN_WINDOW_CLASS_BACKGROUND;
+		wcMain.lpszMenuName		= MAIN_WINDOW_CLASS_MENU_NAME;
+		wcMain.hIconSm			= MAIN_WINDOW_CLASS_ICON_SMALL;
+
+		// Register main window class
+		if( RegisterClassEx( &wcMain ) )
 		{
-			// Successfully created main window
-			int nItemCount;
-			HMENU hMenuSystem;
+			// Successfully registered main window class
+			HWND hWndMain;
 
-			// Get system menu
-			hMenuSystem = GetSystemMenu( hWndMain, FALSE );
+			// Create main window
+			hWndMain = CreateWindowEx( MAIN_WINDOW_EXTENDED_STYLE, MAIN_WINDOW_CLASS_NAME, MAIN_WINDOW_TEXT, MAIN_WINDOW_STYLE, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,  NULL, NULL, hInstance, NULL );
 
-			// Add separator item to system menu
-			InsertMenu( hMenuSystem, SYSTEM_MENU_SEPARATOR_ITEM_POSITION, ( MF_BYPOSITION | MF_SEPARATOR ), 0, NULL );
-
-			// Add about item to system menu
-			InsertMenu( hMenuSystem, SYSTEM_MENU_ABOUT_ITEM_POSITION, MF_BYPOSITION, SYSTEM_MENU_ABOUT_ITEM_ID, SYSTEM_MENU_ABOUT_ITEM_TEXT );
-
-			// Allocate string memory
-			LPTSTR lpszStatusMessage = new char[ STRING_LENGTH + sizeof( char ) ];
-
-			// Show main window
-			ShowWindow( hWndMain, nCmdShow );
-
-			// Update main window
-			UpdateWindow( hWndMain );
-
-			// Populate list box window
-			nItemCount = ListBoxWindowPopulate();
-
-			// Format status message
-			wsprintf( lpszStatusMessage, LIST_BOX_WINDOW_POPULATE_STATUS_MESSAGE_FORMAT_STRING, nItemCount );
-
-			// Show status message on status bar window
-			StatusBarWindowSetText( lpszStatusMessage );
-
-			// Main message loop
-			while( GetMessage( &msg, NULL, 0, 0 ) > 0 )
+			// Ensure that main window was created
+			if( hWndMain )
 			{
-				// Translate message
-				TranslateMessage( &msg );
+				// Successfully created main window
+				int nItemCount;
+				HMENU hMenuSystem;
 
-				// Dispatch message
-				DispatchMessage( &msg );
+				// Get system menu
+				hMenuSystem = GetSystemMenu( hWndMain, FALSE );
 
-			}; // End of main message loop
+				// Add separator item to system menu
+				InsertMenu( hMenuSystem, SYSTEM_MENU_SEPARATOR_ITEM_POSITION, ( MF_BYPOSITION | MF_SEPARATOR ), 0, NULL );
 
-			// Free string memory
-			delete [] lpszStatusMessage;
+				// Add about item to system menu
+				InsertMenu( hMenuSystem, SYSTEM_MENU_ABOUT_ITEM_POSITION, MF_BYPOSITION, SYSTEM_MENU_ABOUT_ITEM_ID, SYSTEM_MENU_ABOUT_ITEM_TEXT );
 
-		} // End of successfully created main window
+				// Allocate string memory
+				LPTSTR lpszStatusMessage = new char[ STRING_LENGTH + sizeof( char ) ];
 
-	} // End of successfully registered main window class
+				// Show main window
+				ShowWindow( hWndMain, nCmdShow );
+
+				// Update main window
+				UpdateWindow( hWndMain );
+
+				// Populate list box window
+				nItemCount = ListBoxWindowPopulate();
+
+				// Format status message
+				wsprintf( lpszStatusMessage, LIST_BOX_WINDOW_POPULATE_STATUS_MESSAGE_FORMAT_STRING, nItemCount );
+
+				// Show status message on status bar window
+				StatusBarWindowSetText( lpszStatusMessage );
+
+				// Main message loop
+				while( GetMessage( &msg, NULL, 0, 0 ) > 0 )
+				{
+					// Translate message
+					TranslateMessage( &msg );
+
+					// Dispatch message
+					DispatchMessage( &msg );
+
+				}; // End of main message loop
+
+				// Free string memory
+				delete [] lpszStatusMessage;
+
+			} // End of successfully created main window
+
+		} // End of successfully registered main window class
+
+		// Disconnect from internet
+		g_internet.Disconnect();
+
+	} // End of successfully connected to internet
+	else
+	{
+		// Unable to connect to internet
+
+		// Display error message
+		MessageBox( NULL, INTERNET_CLASS_UNABLE_TO_CONNECT_TO_INTERNET_ERROR_MESSAGE, ERROR_MESSAGE_CAPTION, ( MB_OK | MB_ICONERROR ) );
+
+	} // End of unable to connect to internet
 
 	return msg.wParam;
 
