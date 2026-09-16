@@ -201,9 +201,74 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMessage, WPARAM wPara
 						if( g_internet.DownloadFile( lpszUrl, lpszLocalFilePath ) )
 						{
 							// Successfully downloaded file
+							File localFile;
 
-							// Format successfully downloaded status message
-							wsprintf( lpszStatusMessage, INTERNET_CLASS_SUCCESSFULLY_DOWNLOADED_STATUS_MESSAGE_FORMAT_STRING, lpszUrl, lpszLocalFilePath );
+							// Open local file
+							if( localFile.Open( lpszLocalFilePath ) )
+							{
+								// Successfully opened local file
+								DWORD dwLocalFileSize;
+
+								// Get local file size
+								dwLocalFileSize = localFile.GetSize();
+
+								// Ensure that local file size was got
+								if( dwLocalFileSize != INVALID_FILE_SIZE )
+								{
+									// Successfully got local file size
+
+									// Allocate string memory
+									LPTSTR lpszLocalFileText = new char[ dwLocalFileSize + sizeof( char ) ];
+
+									// Read local file text
+									if( localFile.Read( lpszLocalFileText, dwLocalFileSize ) )
+									{
+										// Successfully read local file text
+
+										// Terminate local file text
+										lpszLocalFileText[ dwLocalFileSize ] = ( char )NULL;
+
+										// Display local file text
+										MessageBox( hWndMain, lpszLocalFileText, lpszLocalFilePath, ( MB_OK | MB_ICONINFORMATION ) );
+
+										// Format successfully downloaded status message
+										wsprintf( lpszStatusMessage, INTERNET_CLASS_SUCCESSFULLY_DOWNLOADED_STATUS_MESSAGE_FORMAT_STRING, lpszUrl, lpszLocalFilePath );
+
+									} // End of successfully read local file text
+									else
+									{
+										// Unable to read local file
+
+										// Format status message
+										wsprintf( lpszStatusMessage, FILE_CLASS_UNABLE_TO_READ_FILE_ERROR_MESSAGE_FORMAT_STRING, lpszLocalFilePath );
+
+									} // End of unable to read local file
+
+									// Free string memory
+									delete [] lpszLocalFileText;
+
+								} // End of successfully got local file size
+								else
+								{
+									// Unable to get local file size
+
+									// Format status message
+									wsprintf( lpszStatusMessage, FILE_CLASS_UNABLE_TO_GET_FILE_SIZE_ERROR_MESSAGE_FORMAT_STRING, lpszLocalFilePath );
+
+								} // End of unable to get local file size
+
+								// Close local file
+								localFile.Close();
+
+							} // End of successfully opened local file
+							else
+							{
+								// Unable to open local file
+
+								// Format status message
+								wsprintf( lpszStatusMessage, FILE_CLASS_UNABLE_TO_OPEN_FILE_ERROR_MESSAGE_FORMAT_STRING, lpszLocalFilePath );
+
+							} // End of unable to open local file
 
 							// Add successfully downloaded status message to list box window
 							ListBoxWindowAddText( lpszStatusMessage );
