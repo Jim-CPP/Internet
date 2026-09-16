@@ -9,6 +9,7 @@
 #include "Common.h"
 
 #include "FileClass.h"
+#include "InternetFileClass.h"
 
 #define INTERNET_CLASS_USER_AGENT												"InetURL/1.0"
 

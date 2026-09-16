@@ -103,8 +103,8 @@ BOOL Internet::DownloadFile( LPCTSTR lpszUrl, LPTSTR lpszLocalFilePath )
 	if( GetCurrentDirectory( STRING_LENGTH, lpszLocalFilePath ) )
 	{
 		// Successfully got current folder into local file path
-		HINTERNET hInternetFile;
 		LPTSTR lpszLastForwardSlash;
+		InternetFile internetFile;
 
 		// Allocate string memory
 		LPTSTR lpszShortUrl = new char[ STRING_LENGTH ];
@@ -153,10 +153,7 @@ BOOL Internet::DownloadFile( LPCTSTR lpszUrl, LPTSTR lpszLocalFilePath )
 		} // End of unable to find last forward slash in url
 
 		// Open internet file
-		hInternetFile = InternetOpenUrl( m_hInternet, lpszShortUrl, NULL, 0, 0, 0 );
-
-		// Ensure that internet file was opened
-		if( hInternetFile )
+		if( internetFile.Open( m_hInternet, lpszShortUrl  ))
 		{
 			// Successfully opened internet file
 			File localFile;
@@ -169,7 +166,7 @@ BOOL Internet::DownloadFile( LPCTSTR lpszUrl, LPTSTR lpszLocalFilePath )
 				CHAR cBuffer[ INTERNET_CLASS_DOWNLOAD_BUFFER_LENGTH ];
 
 				// Read internet file
-				while( InternetReadFile( hInternetFile, cBuffer, INTERNET_CLASS_DOWNLOAD_BUFFER_LENGTH, &dwRead ) )
+				while( internetFile.Read( cBuffer, INTERNET_CLASS_DOWNLOAD_BUFFER_LENGTH, &dwRead ) )
 				{
 					// Ensure that data was read into buffer
 					if( dwRead == 0 )
@@ -198,7 +195,7 @@ BOOL Internet::DownloadFile( LPCTSTR lpszUrl, LPTSTR lpszLocalFilePath )
 			} // End of successfully created local file
 
 			// Close internet file
-			InternetCloseHandle( hInternetFile );
+			internetFile.Close();
 
 		} // End of successfully opened internet file
 
