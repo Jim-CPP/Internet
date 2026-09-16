@@ -27,11 +27,15 @@ public:
 
 	BOOL Close();
 
+	BOOL Create( LPCTSTR lpszFileName );
+
 	DWORD GetSize();
 
 	BOOL Open( LPCTSTR lpszFileName );
 
 	BOOL Read( LPVOID lpFileText, DWORD dwNumberOfBytesToRead );
+
+	BOOL Write( LPVOID lpFileText, DWORD dwNumberOfBytesToWrite );
 
 protected:
 	HANDLE m_hFile;

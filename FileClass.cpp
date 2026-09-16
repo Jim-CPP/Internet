@@ -74,6 +74,27 @@ BOOL File::Close()
 
 } // End of function File::Close
 
+BOOL File::Create( LPCTSTR lpszFileName )
+{
+	BOOL bResult = FALSE;
+
+	// Create file
+	m_hFile = CreateFile( lpszFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL );
+
+	// Ensure that file was opened
+	if( m_hFile != INVALID_HANDLE_VALUE )
+	{
+		// Successfully created file
+
+		// Update return value
+		bResult = TRUE;
+
+	} // End of successfully created file
+
+	return bResult;
+
+} // End of function File::Create
+
 DWORD File::GetSize()
 {
 	// Get file size
@@ -108,6 +129,13 @@ BOOL File::Read( LPVOID lpFileText, DWORD dwNumberOfBytesToRead )
 	return ReadFile( m_hFile, lpFileText, dwNumberOfBytesToRead, NULL, NULL );
 
 } // End of function File::Read
+
+BOOL File::Write( LPVOID lpFileText, DWORD dwNumberOfBytesToWrite )
+{
+	// Write file
+	return WriteFile( m_hFile, lpFileText, dwNumberOfBytesToWrite, NULL, NULL );
+
+} // End of function File::Write
 
 /*
 File::

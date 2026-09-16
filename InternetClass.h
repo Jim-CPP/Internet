@@ -8,6 +8,8 @@
 #include "Ascii.h"
 #include "Common.h"
 
+#include "FileClass.h"
+
 #define INTERNET_CLASS_USER_AGENT												"InetURL/1.0"
 
 #define INTERNET_CLASS_DOWNLOAD_BUFFER_LENGTH									1024

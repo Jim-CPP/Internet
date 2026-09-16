@@ -108,6 +108,7 @@ BOOL Internet::DownloadFile( LPCTSTR lpszUrl, LPTSTR lpszLocalFilePath )
 
 		// Allocate string memory
 		LPTSTR lpszShortUrl = new char[ STRING_LENGTH ];
+		// Short-url will be url without any forward slash characters on the end
 
 		// Ensure that local file path ends with a back slash
 		if( lpszLocalFilePath[ lstrlen( lpszLocalFilePath ) - sizeof( ASCII_BACK_SLASH_CHARACTER ) ] != ASCII_BACK_SLASH_CHARACTER )
@@ -158,17 +159,13 @@ BOOL Internet::DownloadFile( LPCTSTR lpszUrl, LPTSTR lpszLocalFilePath )
 		if( hInternetFile )
 		{
 			// Successfully opened internet file
-			HANDLE hLocalFile;
+			File localFile;
 
-			// Open local file
-			hLocalFile = CreateFile( lpszLocalFilePath, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL );
-
-			// Ensure that local file was opened
-			if( hLocalFile != INVALID_HANDLE_VALUE )
+			// Create local file
+			if( localFile.Create( lpszLocalFilePath ) )
 			{
-				// Successfully opened local file
+				// Successfully created local file
 				DWORD dwRead;
-				DWORD dwWritten;
 				CHAR cBuffer[ INTERNET_CLASS_DOWNLOAD_BUFFER_LENGTH ];
 
 				// Read internet file
@@ -188,7 +185,7 @@ BOOL Internet::DownloadFile( LPCTSTR lpszUrl, LPTSTR lpszLocalFilePath )
 					cBuffer[ dwRead ] = ( char )NULL;
 
 					// Write buffer into local file
-					WriteFile( hLocalFile, cBuffer, dwRead, &dwWritten, NULL );
+					localFile.Write( cBuffer, dwRead );
 
 				} // End of loop to read internet file
 
@@ -196,9 +193,9 @@ BOOL Internet::DownloadFile( LPCTSTR lpszUrl, LPTSTR lpszLocalFilePath )
 				bResult = TRUE;
 
 				// Close file
-				CloseHandle( hLocalFile );
+				localFile.Close();
 
-			} // End of successfully opened local file
+			} // End of successfully created local file
 
 			// Close internet file
 			InternetCloseHandle( hInternetFile );
