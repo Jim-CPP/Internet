@@ -156,7 +156,7 @@ BOOL Internet::DownloadFile( LPCTSTR lpszUrl, LPTSTR lpszLocalFilePath )
 		if( internetFile.Open( m_hInternet, lpszShortUrl  ))
 		{
 			// Successfully opened internet file
-			File localFile;
+			TextFile localFile;
 
 			// Create local file
 			if( localFile.Create( lpszLocalFilePath ) )

@@ -201,7 +201,7 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMessage, WPARAM wPara
 						if( g_internet.DownloadFile( lpszUrl, lpszLocalFilePath ) )
 						{
 							// Successfully downloaded file
-							File localFile;
+							TextFile localFile;
 
 							// Open local file
 							if( localFile.Open( lpszLocalFilePath ) )
@@ -240,7 +240,7 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMessage, WPARAM wPara
 										// Unable to read local file
 
 										// Format status message
-										wsprintf( lpszStatusMessage, FILE_CLASS_UNABLE_TO_READ_FILE_ERROR_MESSAGE_FORMAT_STRING, lpszLocalFilePath );
+										wsprintf( lpszStatusMessage, TEXT_FILE_CLASS_UNABLE_TO_READ_FILE_ERROR_MESSAGE_FORMAT_STRING, lpszLocalFilePath );
 
 									} // End of unable to read local file
 
@@ -253,7 +253,7 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMessage, WPARAM wPara
 									// Unable to get local file size
 
 									// Format status message
-									wsprintf( lpszStatusMessage, FILE_CLASS_UNABLE_TO_GET_FILE_SIZE_ERROR_MESSAGE_FORMAT_STRING, lpszLocalFilePath );
+									wsprintf( lpszStatusMessage, TEXT_FILE_CLASS_UNABLE_TO_GET_FILE_SIZE_ERROR_MESSAGE_FORMAT_STRING, lpszLocalFilePath );
 
 								} // End of unable to get local file size
 
@@ -266,7 +266,7 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMessage, WPARAM wPara
 								// Unable to open local file
 
 								// Format status message
-								wsprintf( lpszStatusMessage, FILE_CLASS_UNABLE_TO_OPEN_FILE_ERROR_MESSAGE_FORMAT_STRING, lpszLocalFilePath );
+								wsprintf( lpszStatusMessage, TEXT_FILE_CLASS_UNABLE_TO_OPEN_FILE_ERROR_MESSAGE_FORMAT_STRING, lpszLocalFilePath );
 
 							} // End of unable to open local file
 
