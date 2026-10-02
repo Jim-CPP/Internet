@@ -6,6 +6,7 @@ TextFile::TextFile()
 {
 	// Initialise member variables
 	ZeroMemory( &m_hTextFile, sizeof( m_hTextFile ) );
+	m_lpszFileText = NULL;
 
 } // End of function TextFile::TextFile
 
@@ -13,6 +14,16 @@ TextFile::~TextFile()
 {
 	// Clear member variables
 	ZeroMemory( &m_hTextFile, sizeof( m_hTextFile ) );
+
+	// See if file text is valid
+	if( m_lpszFileText )
+	{
+		// File text is valid
+
+		// Free string memory
+		delete [] m_lpszFileText;
+
+	} // End of file text is valid
 
 } // End of function TextFile::~TextFile
 
@@ -95,6 +106,13 @@ BOOL TextFile::Create( LPCTSTR lpszFileName )
 
 } // End of function TextFile::Create
 
+int TextFile::DisplayText( HWND hWndParent, LPTSTR lpszTitle, UINT uType )
+{
+	// Display file text
+	return MessageBox( hWndParent, m_lpszFileText, lpszTitle, uType );
+
+} // End of function TextFile::DisplayText
+
 DWORD TextFile::GetSize()
 {
 	// Get text file size
@@ -122,6 +140,30 @@ BOOL TextFile::Open( LPCTSTR lpszFileName )
 	return bResult;
 
 } // End of function TextFile::Open
+
+DWORD TextFile::Read( DWORD dwNumberOfBytesToRead )
+{
+	DWORD dwResult = 0;
+
+	// See if file text is valid
+	if( m_lpszFileText )
+	{
+		// File text is valid
+
+		// Free string memory
+		delete [] m_lpszFileText;
+
+	} // End of file text is valid
+
+	// Allocate string memory
+	m_lpszFileText = new char[ dwNumberOfBytesToRead + sizeof( char ) ];
+
+	// Read file text
+	ReadFile( m_hTextFile, m_lpszFileText, dwNumberOfBytesToRead, &dwResult, NULL );
+
+	return dwResult;
+
+} // End of function TextFile::Read
 
 BOOL TextFile::Read( LPTSTR lpszFileText, DWORD dwNumberOfBytesToRead )
 {

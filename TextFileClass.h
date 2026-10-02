@@ -29,9 +29,13 @@ public:
 
 	BOOL Create( LPCTSTR lpszFileName );
 
+	int DisplayText( HWND hWndParent, LPTSTR lpszTitle, UINT uType = ( MB_OK | MB_ICONINFORMATION ) );
+
 	DWORD GetSize();
 
 	BOOL Open( LPCTSTR lpszFileName );
+
+	DWORD Read( DWORD dwNumberOfBytesToRead );
 
 	BOOL Read( LPTSTR lpszFileText, DWORD dwNumberOfBytesToRead );
 
@@ -39,5 +43,6 @@ public:
 
 protected:
 	HANDLE m_hTextFile;
+	LPTSTR m_lpszFileText;
 
 }; // End of class TextFile

@@ -217,6 +217,29 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMessage, WPARAM wPara
 								{
 									// Successfully got local file size
 
+									// Read local file text
+									if( localFile.Read( dwLocalFileSize ) )
+									{
+										// Successfully read local file text
+
+										// Display local file text
+										localFile.DisplayText( hWndMain, lpszLocalFilePath, MB_OK );
+
+										// Format successfully downloaded status message
+										wsprintf( lpszStatusMessage, INTERNET_CLASS_SUCCESSFULLY_DOWNLOADED_STATUS_MESSAGE_FORMAT_STRING, lpszUrl, lpszLocalFilePath );
+
+									} // End of successfully read local file text
+									else
+									{
+										// Unable to read local file text
+
+										// Format status message
+										wsprintf( lpszStatusMessage, TEXT_FILE_CLASS_UNABLE_TO_READ_FILE_ERROR_MESSAGE_FORMAT_STRING, lpszLocalFilePath );
+
+									} // End of unable to read local file text
+
+
+/*
 									// Allocate string memory
 									LPTSTR lpszLocalFileText = new char[ dwLocalFileSize + sizeof( char ) ];
 
@@ -246,7 +269,7 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMessage, WPARAM wPara
 
 									// Free string memory
 									delete [] lpszLocalFileText;
-
+*/
 								} // End of successfully got local file size
 								else
 								{
