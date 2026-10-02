@@ -5,6 +5,24 @@
 // Global variables
 Internet g_internet;
 
+BOOL TagFunction( LPCTSTR lpszTag )
+{
+	BOOL bResult = FALSE;
+
+	// Add tag to list box window
+	if( ListBoxWindowAddText( lpszTag ) >= 0 )
+	{
+		// Successfully added tag to list box window
+
+		// Update return value
+		bResult = TRUE;
+
+	} // End of successfully added tag to list box window
+
+	return bResult;
+
+} // End of function TagFunction
+
 void EditWindowUpdateFunction( int nTextLength )
 {
 	// See if edit window contains text
@@ -194,8 +212,8 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMessage, WPARAM wPara
 						// Format downloading status message
 						wsprintf( lpszStatusMessage, INTERNET_CLASS_DOWNLOADING_STATUS_MESSAGE_FORMAT_STRING, lpszUrl );
 
-						// Add downloading status message to list box window
-						ListBoxWindowAddText( lpszStatusMessage );
+						// Show status message on status bar window
+						StatusBarWindowSetText( lpszStatusMessage );
 
 						// Download file
 						if( g_internet.DownloadFile( lpszUrl, lpszLocalFilePath ) )
@@ -222,8 +240,11 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMessage, WPARAM wPara
 									{
 										// Successfully read local file text
 
-										// Display local file text
-										localFile.DisplayText( hWndMain, lpszLocalFilePath, MB_OK );
+										// Clear list box window
+										ListBoxWindowResetContent();
+
+										// Process tags on local file
+										localFile.ProcessTags( &TagFunction );
 
 										// Format successfully downloaded status message
 										wsprintf( lpszStatusMessage, INTERNET_CLASS_SUCCESSFULLY_DOWNLOADED_STATUS_MESSAGE_FORMAT_STRING, lpszUrl, lpszLocalFilePath );
@@ -261,9 +282,6 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMessage, WPARAM wPara
 
 							} // End of unable to open local file
 
-							// Add successfully downloaded status message to list box window
-							ListBoxWindowAddText( lpszStatusMessage );
-
 						} // End of successfully downloaded file
 						else
 						{
@@ -272,10 +290,10 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMessage, WPARAM wPara
 							// Format unable to download status message
 							wsprintf( lpszStatusMessage, INTERNET_CLASS_UNABLE_TO_DOWNLOAD_STATUS_MESSAGE_FORMAT_STRING, lpszUrl );
 
-							// Add unable to download status message to list box window
-							ListBoxWindowAddText( lpszStatusMessage );
-
 						} // End of unable to download file
+
+						// Show status message on status bar window
+						StatusBarWindowSetText( lpszStatusMessage );
 
 						// Free string memory
 						delete [] lpszLocalFilePath;

@@ -9,22 +9,16 @@
 
 #include "TextFileClass.h"
 
-#define TEMPLATE_WINDOW_CLASS_NAME												WC_LISTBOX
-#define TEMPLATE_WINDOW_CLASS_DEFAULT_TEXT										NULL
-#define TEMPLATE_WINDOW_CLASS_DEFAULT_MENU										NULL
-#define TEMPLATE_WINDOW_CLASS_DEFAULT_EXTENDED_STYLE							0
-#define TEMPLATE_WINDOW_CLASS_DEFAULT_STYLE										( WS_CHILD | WS_VISIBLE | WS_BORDER | LBS_NOINTEGRALHEIGHT | LBS_NOTIFY )
-#define TEMPLATE_WINDOW_CLASS_DEFAULT_LEFT										0
-#define TEMPLATE_WINDOW_CLASS_DEFAULT_TOP										0
-#define TEMPLATE_WINDOW_CLASS_DEFAULT_WIDTH										100
-#define TEMPLATE_WINDOW_CLASS_DEFAULT_HEIGHT									100
-#define TEMPLATE_WINDOW_CLASS_DEFAULT_LP_PARAM									NULL
+#define HTML_FILE_CLASS_START_OF_TAG_CHARACTER									'<'
+#define HTML_FILE_CLASS_END_OF_TAG_CHARACTER									'>'
 
 class HtmlFile : public TextFile
 {
 public:
 	HtmlFile();
 	~HtmlFile();
+
+	int ProcessTags( BOOL( *lpTagFunction )( LPCTSTR lpszTag ) );
 
 protected:
 

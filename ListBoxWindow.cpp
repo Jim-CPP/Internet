@@ -152,3 +152,10 @@ int ListBoxWindowPopulate()
 	return nResult;
 
 } // End of function ListBoxWindowPopulate
+
+void ListBoxWindowResetContent()
+{
+	// Reset list box window content
+	SendMessage( g_hWndListBox, LB_RESETCONTENT, ( WPARAM )NULL, ( LPARAM )NULL );
+
+} // End of function ListBoxWindowResetContent

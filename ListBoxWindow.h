@@ -11,7 +11,7 @@
 #define LIST_BOX_WINDOW_CLASS_NAME												WC_LISTBOX
 
 #define LIST_BOX_WINDOW_EXTENDED_STYLE											0
-#define LIST_BOX_WINDOW_STYLE													( WS_CHILD | WS_VISIBLE | WS_BORDER | LBS_NOINTEGRALHEIGHT | LBS_NOTIFY )
+#define LIST_BOX_WINDOW_STYLE													( WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL | WS_BORDER | LBS_NOINTEGRALHEIGHT | LBS_NOTIFY )
 #define LIST_BOX_WINDOW_TEXT													NULL
 
 #define LIST_BOX_WINDOW_POPULATE_STATUS_MESSAGE_FORMAT_STRING					"%d items"
@@ -27,3 +27,5 @@ LRESULT ListBoxWindowHandleCommandMessage( HWND hWndMain, WPARAM wParam, LPARAM 
 BOOL ListBoxWindowMove( int nLeft, int nTop, int nWidth, int nHeight );
 
 int ListBoxWindowPopulate();
+
+void ListBoxWindowResetContent();
